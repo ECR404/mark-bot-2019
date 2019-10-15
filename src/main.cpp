@@ -4,6 +4,11 @@ auto myChassis = ChassisControllerFactory::create(
 	{2, 3}, {-4, -5}
 );
 
+okapi::Motor liftMotorLeft(1);
+okapi::Motor liftMotorRight(-10);
+
+okapi::MotorGroup liftGroup({liftMotorLeft, liftMotorRight});
+
 /**
  * A callback function for LLEMU's center button.
  *
@@ -80,9 +85,6 @@ void autonomous() {}
 void opcontrol() {
 	okapi::Controller master(okapi::ControllerId::master);
 
-	okapi::Motor liftLeft(5);
-	okapi::Motor liftRight(6);
-
 	while (true) {
 		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
 		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
@@ -90,28 +92,19 @@ void opcontrol() {
 		
 		myChassis.tank(master.getAnalog(ControllerAnalog::leftY), master.getAnalog(ControllerAnalog::rightY), 0);
 
-		pros::ADIAnalogIn stopButton('H')
+		okapi::ADIButton stopButton('H');
 
-		if(stopButton.get_new_press())
+		if(stopButton.changedToPressed())
 		{
 			//TODO: Stop Motor
 		}
 
-		if(master.getDigital(ControllerDigital::UP))
-		{
-			liftRight.moveVelocity(100);
-			liftLeft.moveVelocity(-100);
-		}
-		else if(master.getDigital(ControllerDown::DOWN))
-		{
-			liftRight.moveVelocity(-100);
-			liftLeft.moveVelocity(100);
-		}
+		if(master.getDigital(ControllerDigital::up))
+			liftGroup.moveVelocity(100);
+		else if(master.getDigital(ControllerDigital::down))
+			liftGroup.moveVelocity(-100);
 		else
-		{
-			liftRight.moveVelocity(0);
-			liftLeft.moveVelocity(0);
-		}
+			liftGroup.moveVelocity(0);
 
 		pros::delay(20);
 	}
