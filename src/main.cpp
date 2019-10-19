@@ -1,12 +1,9 @@
 #include "main.h"
+#include "tasks.h"
 
 auto myChassis = ChassisControllerFactory::create(
 	{2, 3}, {-4, -5}
 );
-
-okapi::Motor liftMotorLeft(-1);
-okapi::Motor liftMotorRight(7);
-okapi::MotorGroup liftGroup({liftMotorLeft, liftMotorRight});
 
 okapi::Motor clawMotor(-6);
 
@@ -85,7 +82,8 @@ void autonomous() {}
  */
 void opcontrol() {
 	okapi::Controller master(okapi::ControllerId::master);
-	pros::ADIDigitalIn stopButton(7);
+
+	pros::Task liftTask(handleLift, &master, "lift");
 
 	while (true) {
 		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
@@ -93,17 +91,6 @@ void opcontrol() {
 		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
 		
 		myChassis.tank(master.getAnalog(ControllerAnalog::leftY), master.getAnalog(ControllerAnalog::rightY), 0);
-
-		pros::lcd::set_text(2, std::to_string(stopButton.get_value()));
-
-		if(ControllerButton(ControllerDigital::up).isPressed())
-			liftGroup.moveVoltage(12000);
-		else if(ControllerButton(ControllerDigital::down).isPressed())
-			liftGroup.moveVoltage(-12000);
-		else if(stopButton.get_value() == 1 && !master.getDigital(ControllerDigital::up))
-			liftGroup.moveVoltage(-12000);
-		else
-			liftGroup.moveVelocity(0);
 
 		if(master.getDigital(ControllerDigital::R1))
 			clawMotor.moveVelocity(100);
