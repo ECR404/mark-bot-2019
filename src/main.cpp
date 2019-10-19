@@ -5,7 +5,7 @@ auto myChassis = ChassisControllerFactory::create(
 );
 
 okapi::Motor liftMotorLeft(-1);
-okapi::Motor liftMotorRight(10);
+okapi::Motor liftMotorRight(7);
 okapi::MotorGroup liftGroup({liftMotorLeft, liftMotorRight});
 
 okapi::Motor clawMotor(-6);
