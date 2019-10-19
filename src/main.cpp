@@ -1,14 +1,14 @@
 #include "main.h"
 
 auto myChassis = ChassisControllerFactory::create(
-	{2, 3}, {-4, -5}
+	{2, 6}, {-4, -5}
 );
 
 okapi::Motor liftMotorLeft(-1);
 okapi::Motor liftMotorRight(7);
 okapi::MotorGroup liftGroup({liftMotorLeft, liftMotorRight});
 
-okapi::Motor clawMotor(-6);
+okapi::Motor clawMotor(-3);
 
 /**
  * A callback function for LLEMU's center button.
