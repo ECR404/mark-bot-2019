@@ -5,7 +5,7 @@ auto myChassis = ChassisControllerFactory::create(
 );
 
 okapi::Motor liftMotorLeft(-1);
-okapi::Motor liftMotorRight(7);
+okapi::Motor liftMotorRight(10);
 okapi::MotorGroup liftGroup({liftMotorLeft, liftMotorRight});
 
 okapi::Motor clawMotor(-6);
@@ -97,9 +97,9 @@ void opcontrol() {
 		pros::lcd::set_text(2, std::to_string(stopButton.get_value()));
 
 		if(ControllerButton(ControllerDigital::up).isPressed())
-			liftGroup.moveVoltage(999999);
+			liftGroup.moveVoltage(12000);
 		else if(ControllerButton(ControllerDigital::down).isPressed())
-			liftGroup.moveVoltage(-999999);
+			liftGroup.moveVoltage(-12000);
 		else if(stopButton.get_value() == 1 && !master.getDigital(ControllerDigital::up))
 			liftGroup.moveVoltage(-12000);
 		else
